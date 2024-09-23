@@ -1,0 +1,131 @@
+<style>
+        body {
+            font-family: 'Edu VIC WA NT Beginner', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #f5d20a;
+            color: white;
+            padding: 5px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            color: black;
+        }
+
+        .header-content h1 {
+            margin: 0;
+            font-family: 'Edu VIC WA NT Beginner', system-ui, sans-serif;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .tab {
+            background: transparent;
+            border: 1px solid #f5d20a;
+            border-radius: 5px;
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+            font-family: 'Edu VIC WA NT Beginner', system-ui, sans-serif;
+        }
+
+        .tab:hover {
+            background: #f1f1f100;
+            color: rgb(0, 0, 0);
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .task-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .task-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            flex: 1 1 calc(25% - 20px);
+            max-width: calc(25% - 20px);
+            box-sizing: border-box;
+            transition: transform 0.3s ease, background 0.3s ease;
+            font-family: 'Edu VIC WA NT Beginner', system-ui, sans-serif;
+        }
+
+        .task-box:hover {
+            background-color: #e9ecef;
+            transform: scale(1.05);
+        }
+
+        .task-box img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .task-box h3 {
+            margin: 15px 0;
+            font-size: 18px;
+        }
+
+        .task-box p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 1200px) {
+            .task-box {
+                flex: 1 1 calc(33.333% - 20px);
+                max-width: calc(33.333% - 20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .task-box {
+                flex: 1 1 calc(50% - 20px);
+                max-width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .task-box {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+
+        .content-section {
+            display: none;
+            padding: 20px;
+            border: 1px solid #f5d20a;
+            border-radius: 5px;
+            background-color: white;
+            margin-top: 20px;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+       
+    </style>
