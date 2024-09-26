@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Bulk Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #f5d20a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #f5d20a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Send Bulk Email</h2>
+
+    <!-- Form for sending bulk email -->
+    <form id="bulkEmailForm">
+        <label for="recipients">Recipients (comma separated):</label>
+        <input type="text" id="recipients" name="recipients" placeholder="e.g. email1@example.com, email2@example.com" required>
+
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" placeholder="Email Subject" required>
+
+        <label for="body">Message:</label>
+        <textarea id="body" name="body" rows="5" placeholder="Your message here..." required></textarea>
+
+        <button type="submit">Send Emails</button>
+    </form>
+
+    <div id="responseMessage" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+    document.getElementById('bulkEmailForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Collect form data
+        const recipients = document.getElementById('recipients').value.split(',').map(email => email.trim());
+        const subject = document.getElementById('subject').value;
+        const body = document.getElementById('body').value;
+
+        // Create the payload to send to the Flask API
+        const payload = {
+            recipients: recipients,
+            subject: subject,
+            body: body
+        };
+
+        // Send POST request to the Flask API
+        fetch('/send_bulk_email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('responseMessage').innerHTML = '<p style="color: green;">' + data.message + '</p>';
+            } else {
+                document.getElementById('responseMessage').innerHTML = '<p style="color: red;">' + data.message + '</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('responseMessage').innerHTML = '<p style="color: red;">Error sending emails. Please try again.</p>';
+        });
+    });
+</script>
+
+</body>
+</html>

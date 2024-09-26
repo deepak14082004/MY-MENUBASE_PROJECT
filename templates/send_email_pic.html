@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Captured Photo via Email</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="email"]:focus {
+            border-color: #f5d20a;
+            outline: none;
+        }
+
+        button {
+            background-color: #f5d20a;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #f5d20a;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #f5d20a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Send Captured Photo via Email</h2>
+        <form id="photoForm">
+            <label for="receiver_email">Receiver Email:</label>
+            <input type="email" id="receiver_email" name="receiver_email" placeholder="Enter receiver's email" required>
+            <button type="submit">Send Photo</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('photoForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const email = document.getElementById('receiver_email').value;
+
+            // Send the email as JSON using fetch
+            fetch('/send-photo-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',  // Ensure correct content type
+                },
+                body: JSON.stringify({ receiver_email: email }),  // Send the data as JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('message');
+                if (data.error) {
+                    messageDiv.style.color = 'red';
+                    messageDiv.innerText = 'Error: ' + data.error;
+                } else {
+                    messageDiv.style.color = '#28a745';
+                    messageDiv.innerText = 'Success: ' + data.message;
+                }
+            })
+            .catch((error) => {
+                const messageDiv = document.getElementById('message');
+                messageDiv.style.color = 'red';
+                messageDiv.innerText = 'An error occurred: ' + error;
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run Training</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #f5d20a;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #f5d20a;
+        }
+        #output {
+            margin-top: 20px;
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Run Training Script</h2>
+    <form id="trainingForm">
+        <button type="submit">Start Training</button>
+    </form>
+    <div id="output"></div>
+</div>
+
+<script>
+    document.getElementById('trainingForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        fetch('/run-training', {
+            method: 'POST',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('output').textContent = data.output; // Display the output
+            } else {
+                document.getElementById('output').textContent = 'Error: ' + data.message;
+            }
+        })
+        .catch((error) => {
+            document.getElementById('output').textContent = 'Error: ' + error;
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photo to Instagram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #f5d20a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f5d20a;
+        }
+
+        .message {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Photo to Instagram</h2>
+        <form id="instagramForm">
+            <label for="image_url">Image URL:</label>
+            <input type="text" id="image_url" name="image_url" placeholder="Enter image URL" required>
+
+            <label for="caption">Caption:</label>
+            <textarea id="caption" name="caption" rows="4" placeholder="Enter caption here..." required></textarea>
+
+            <button type="submit">Upload Photo</button>
+        </form>
+        <div class="message" id="responseMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById('instagramForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            // Get form data
+            const image_url = document.getElementById('image_url').value;
+            const caption = document.getElementById('caption').value;
+
+            // Prepare data to send to Flask API
+            const data = {
+                image_url: image_url,
+                caption: caption
+            };
+
+            // Send the data to Flask API via POST request
+            fetch('/upload-photo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the response message
+                const responseMessage = document.getElementById('responseMessage');
+                if (data.status === 'success') {
+                    responseMessage.innerHTML = 'Photo uploaded successfully!';
+                    responseMessage.style.color = 'green';
+                } else {
+                    responseMessage.innerHTML = 'Error: ' + data.message;
+                    responseMessage.style.color = 'red';
+                }
+            })
+            .catch(error => {
+                // Display error message
+                const responseMessage = document.getElementById('responseMessage');
+                responseMessage.innerHTML = 'Error: ' + error.message;
+                responseMessage.style.color = 'red';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech to Text</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9; /* Light background for the body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white; /* White background for the container */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px; /* Fixed width for better alignment */
+        }
+
+        h1 {
+            font-size: 24px; /* Larger font size for the heading */
+            color: #333; /* Dark color for better visibility */
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #f5d20a; /* Blue background for button */
+            color: white; /* White text for button */
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #f5d20a; /* Darker blue on hover */
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc; /* Border around the output */
+            border-radius: 5px;
+            background-color: #f1f1f1; /* Light background for output */
+            min-height: 50px; /* Minimum height for output area */
+            word-wrap: break-word; /* Break words for long text */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Speech to Text</h1>
+        <button id="start">Start Listening</button>
+        <p id="output"></p>
+    </div>
+    
+    <script>
+        const startButton = document.getElementById('start');
+        const output = document.getElementById('output');
+
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            
+            recognition.continuous = true; // Keep listening until stopped
+            recognition.interimResults = true; // Show interim results
+
+            recognition.onstart = () => {
+                console.log('Voice recognition started. Speak into the microphone.');
+            };
+
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                output.textContent = transcript; // Display the result
+                
+                // Optionally send the transcript to the server
+                fetch('/process_speech', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: transcript })
+                });
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Error occurred in recognition: ' + event.error);
+            };
+
+            recognition.onend = () => {
+                console.log('Voice recognition ended.');
+            };
+
+            startButton.onclick = () => {
+                recognition.start(); // Start the speech recognition
+            };
+        } else {
+            console.error('Speech recognition not supported in this browser.');
+        }
+    </script>
+</body>
+</html>

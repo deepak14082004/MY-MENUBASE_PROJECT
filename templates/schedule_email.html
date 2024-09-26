@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f5d20a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #f5d20a;
+        }
+        #response {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Schedule an Email</h1>
+    <form id="emailForm">
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" required>
+
+        <label for="recipient">Recipient Email:</label>
+        <input type="email" id="recipient" required>
+
+        <label for="body">Email Body:</label>
+        <textarea id="body" rows="5" required></textarea>
+
+        <label for="send_time">Send Time (YYYY-MM-DD HH:MM:SS):</label>
+        <input type="text" id="send_time" required>
+
+        <button type="submit">Schedule Email</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const subject = document.getElementById('subject').value;
+            const recipient = document.getElementById('recipient').value;
+            const body = document.getElementById('body').value;
+            const send_time = document.getElementById('send_time').value;
+
+            fetch('/schedule_email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subject, recipient, body, send_time })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').textContent = data.message;
+                document.getElementById('response').style.color = data.status === 'error' ? 'red' : 'green';
+            })
+            .catch(error => {
+                document.getElementById('response').textContent = 'Error: ' + error;
+                document.getElementById('response').style.color = 'red';
+            });
+        });
+    </script>
+</body>
+</html>
